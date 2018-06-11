@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BILModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MailInfos">
+          <Key>
+            <PropertyRef Name="MailID" />
+          </Key>
+          <Property Name="MailID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" />
+          <Property Name="MailAddress" Type="varchar" MaxLength="50" />
+          <Property Name="Goup" Type="varchar" MaxLength="50" />
+          <Property Name="PhoneNum" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Function Name="CheckHDDSize_Setting" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Line" Type="varchar" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="Public_Update_WatchDog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Line" Type="varchar" Mode="In" />
+          <Parameter Name="IP" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SW_Module_Path_Read" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ServerIP" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="BILModelStoreContainer">
+          <EntitySet Name="MailInfos" EntityType="Self.MailInfos" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BILModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MailInfo">
+          <Key>
+            <PropertyRef Name="MailID" />
+          </Key>
+          <Property Name="MailID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Goup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNum" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MailInfos" EntityType="Self.MailInfo" />
+          <FunctionImport Name="CheckHDDSize_Setting" ReturnType="Collection(BILModel.CheckHDDSize_Setting_Result)">
+            <Parameter Name="Line" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Public_Update_WatchDog" ReturnType="Collection(String)">
+            <Parameter Name="Line" Mode="In" Type="String" />
+            <Parameter Name="IP" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SW_Module_Path_Read" ReturnType="Collection(BILModel.SW_Module_Path_Read_Result)">
+            <Parameter Name="ServerIP" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="CheckHDDSize_Setting_Result">
+          <Property Type="String" Name="LineGroup" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="MonitorIP" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ServerIP" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AlarmPercent" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WIN_PASS" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WIN_ACCOUNT" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SW_Module_Path_Read_Result">
+          <Property Type="String" Name="RACK_LINE" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="customer" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="ModuleType" Nullable="false" MaxLength="14" />
+          <Property Type="String" Name="ReadModulePath" Nullable="false" MaxLength="6" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BILModelStoreContainer" CdmEntityContainer="DbEntities">
+          <EntitySetMapping Name="MailInfos">
+            <EntityTypeMapping TypeName="BILModel.MailInfo">
+              <MappingFragment StoreEntitySet="MailInfos">
+                <ScalarProperty Name="MailID" ColumnName="MailID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="MailAddress" ColumnName="MailAddress" />
+                <ScalarProperty Name="Goup" ColumnName="Goup" />
+                <ScalarProperty Name="PhoneNum" ColumnName="PhoneNum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CheckHDDSize_Setting" FunctionName="BILModel.Store.CheckHDDSize_Setting">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BILModel.CheckHDDSize_Setting_Result">
+                <ScalarProperty Name="LineGroup" ColumnName="LineGroup" />
+                <ScalarProperty Name="MonitorIP" ColumnName="MonitorIP" />
+                <ScalarProperty Name="ServerIP" ColumnName="ServerIP" />
+                <ScalarProperty Name="AlarmPercent" ColumnName="AlarmPercent" />
+                <ScalarProperty Name="WIN_PASS" ColumnName="WIN_PASS" />
+                <ScalarProperty Name="WIN_ACCOUNT" ColumnName="WIN_ACCOUNT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Public_Update_WatchDog" FunctionName="BILModel.Store.Public_Update_WatchDog" />
+          <FunctionImportMapping FunctionImportName="SW_Module_Path_Read" FunctionName="BILModel.Store.SW_Module_Path_Read">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BILModel.SW_Module_Path_Read_Result">
+                <ScalarProperty Name="RACK_LINE" ColumnName="RACK_LINE" />
+                <ScalarProperty Name="customer" ColumnName="customer" />
+                <ScalarProperty Name="ModuleType" ColumnName="ModuleType" />
+                <ScalarProperty Name="ReadModulePath" ColumnName="ReadModulePath" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

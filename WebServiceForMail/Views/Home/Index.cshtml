@@ -1,0 +1,148 @@
+﻿@using WebServiceForMail.Models
+
+@{
+    ViewBag.Title = "MailInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    <script>
+        var model = {
+            MailInfo: ko.observableArray(),
+            editor: {
+                UserID: ko.observable(""),
+                UserName: ko.observable(""),
+                MailAddress: ko.observable(""),
+                Goup: ko.observable(""),
+                PhoneNum: ko.observable("")
+            },
+            displaySummary: ko.observable(true)
+        };
+
+        function sendAjaxRequest(httpMethod, callback, url, reqData) {
+            $.ajax("/api/web" + (url ? "/" + url : ""), {
+                type: httpMethod,
+                success: callback,
+                data: reqData
+            });
+        }
+
+        function getAllItems() {
+            sendAjaxRequest("GET", function (data) {
+                model.MailInfo.removeAll();
+                for (var i = 0; i < data.length; i++) {
+                    model.MailInfo.push(data[i]);
+                }
+            });
+        }
+
+        function removeItem(item) {
+            sendAjaxRequest("DELETE", function () {
+                for (var i = 0; i < model.MailInfo().length; i++) {
+                    if (model.MailInfo()[i].MailID == item.MailID) {
+                        model.MailInfo.remove(model.MailInfo()[i]);
+                        break;
+                    }
+                }
+            }, item.MailID);
+        }
+
+        function handleCreateClick() {
+            model.displaySummary(false);
+        }
+
+        function handleEditorClick() {
+            sendAjaxRequest("POST", function (newItem) {
+                model.MailInfo.push(newItem);
+                model.displaySummary(true);
+            }, null, {
+                //ClientName: model.editor.name,
+                //Location: model.editor.location
+            UserID: model.editor.UserID,
+            UserName: model.editor.UserName,
+            MailAddress: model.editor.MailAddress,
+            Goup: model.editor.Goup,
+            PhoneNum: model.editor.PhoneNum
+
+            });
+        }
+
+        $(document).ready(function () {
+            getAllItems();
+            ko.applyBindings(model);
+        });
+    </script>
+}
+
+@section Body {
+    <div id="summary" class="section panel panel-primary"
+         data-bind="if: model.displaySummary">
+        <div class="panel-heading">MailInfos Summary</div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <tr><th>MailID</th><th>UserID</th><th>UserName</th><th>MailAddress</th><th>Goup</th><th>PhoneNum</th><th></th></tr>
+                </thead>
+                <tbody data-bind="foreach: model.MailInfo">
+                    <tr>
+                        <td data-bind="text: MailID"></td>
+                        <td data-bind="text: UserID"></td>
+                        <td data-bind="text: UserName"></td>
+                        <td data-bind="text: MailAddress"></td>
+                        <td data-bind="text: Goup"></td>
+                        <td data-bind="text: PhoneNum"></td>
+
+                        <td>
+                            <button class="btn btn-xs btn-primary"
+                                    data-bind="click: removeItem">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary"
+                    data-bind="click: handleCreateClick">
+                Create
+            </button>
+        </div>
+    </div>
+    <div id="editor" class="section panel panel-primary"
+         data-bind="ifnot: model.displaySummary">
+        <div class="panel-heading">
+            Create MailInfos
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                <label>UserID</label>
+                <input class="form-control" data-bind="value: model.editor.UserID" />
+            </div>
+            <div class="form-group">
+                <label>UserName</label>
+                <input class="form-control" data-bind="value: model.editor.UserName" />
+            </div>
+            <div class="form-group">
+                <label>MailAddress</label>
+                <input class="form-control" data-bind="value: model.editor.MailAddress" />
+            </div>
+            <div class="form-group">
+                <label>Goup</label>
+                <input class="form-control" data-bind="value: model.editor.Goup" />
+            </div>
+            <div class="form-group">
+                <label>PhoneNum</label>
+                <input class="form-control" data-bind="value: model.editor.PhoneNum" />
+            </div>
+
+            <button class="btn btn-primary"
+                    data-bind="click: handleEditorClick">
+                Save
+            </button>
+        </div>
+    </div>
+}
+
+
+
+
